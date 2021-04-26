@@ -1,12 +1,23 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class AdvUser(models.Model):
+    is_activated = models.BooleanField(default=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
 class Bb(models.Model):
     title = models.CharField(max_length=50, verbose_name='Товар')
     content = models.TextField(null=True, blank=True, verbose_name='Описание')
     price = models.FloatField(null=True, blank=True, verbose_name='Цена')
     published = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Опубликованно')
     rubric = models.ForeignKey('Rubric', null=True, on_delete=models.PROTECT, verbose_name='Рубрика')
+
+    def title_and_price(self):
+        if self.price:
+            return '%s (%.2f)' % (self.title, self.price)
+        else:
+            return self.title
+    title_and_price.short_description = 'Название и цена'
 
     class Meta:
         verbose_name_plural = 'Объявления'
@@ -23,10 +34,6 @@ class Rubric(models.Model):
         verbose_name_plural = 'Рубрики'
         verbose_name = 'Рубрика'
         ordering = ['name'] 
-
-class AdvUser(models.Model):
-    is_activated = models.BooleanField(default=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 class Spare(models.Model):
     name = models.CharField(max_length=30)
