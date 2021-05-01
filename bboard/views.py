@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.views.generic.edit import CreateView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
+from django.template.response import TemplateResponse
 
 from .models import Bb, Rubric
 from .forms import BbForm
@@ -9,7 +11,7 @@ def index(request):
     bbs = Bb.objects.order_by()
     rubrics = Rubric.objects.all()
     context = {'bbs': bbs, 'rubrics' : rubrics}
-    return render(request, 'bboard/index.html', context)
+    return TemplateResponse(request, 'bboard/index.html', context)
 
 def by_rubric(request, rubric_id):
     bbs = Bb.objects.filter(rubric=rubric_id)
@@ -27,4 +29,18 @@ class BbCreateView(CreateView):
         context=super().get_context_data(**kwargs)
         context['rubrics'] = Rubric.objects.all()
         return context
-    
+
+def add_and_save(request):
+    if request.method == 'POST':
+        bbf=BbForm(request.POST)
+        if bbf.is_valid():
+            bbf.save()
+            return HttpResponseRedirect(reverse('bboard:by_rubric', 
+                   kwargs={'rubric_id': bbf.cleaned_data['rubric'].pk}))
+        else:
+            context={'form': bbf}
+            return render (request, 'bboard/create.html', context)
+    else:
+        bbf=BbForm()
+        context = {'form': bbf}
+        return render (request, 'bboard/create.html', context)
