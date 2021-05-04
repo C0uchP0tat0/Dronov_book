@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView, FormView, DeleteView
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.template.response import TemplateResponse
@@ -42,6 +42,25 @@ class BbCreateView(CreateView):
         context['rubrics'] = Rubric.objects.all()
         return context
 
+class BbEditView(UpdateView):
+    model = Bb
+    form_class = BbForm
+    success_url = reverse_lazy('index')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['rubrics'] = Rubric.objects.all()
+        return context  
+
+class BbDeleteView(DeleteView):
+    model = Bb
+    success_url = reverse_lazy('index')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['rubrics'] = Rubric.objects.all()
+        return context  
+
 class BbDetailView(DetailView):
     model = Bb
 
@@ -49,6 +68,28 @@ class BbDetailView(DetailView):
         context = super().get_context_data(*args, **kwargs)
         context['rubrics'] = Rubric.objects.all()
         return context
+
+'''class BbAddView(FormView):
+    template_name = 'bboard/create.html'
+    form_class = BbForm
+    initial = {'price' : 0.0}
+
+    def get_context_data(self, *args, **kwargs):
+        context=super().get_context_data(*args, **kwargs)
+        context['rubrics'] = Rubric.objects.all()
+        return context
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+    def get_form(self, form_class=None):
+        self.object = super().get_form(form_class)
+        return self.object
+
+    def get_success_url(self):
+        return reverse('by_rubric',
+            kwargs={'rubric_id': self.object.cleaned_data['rubric'].pk})'''
 
 '''def index(request):
     bbs = Bb.objects.order_by()
