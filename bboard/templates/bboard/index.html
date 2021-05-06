@@ -9,6 +9,10 @@
 	<p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
 	<p><a href="{% url 'bb_form' pk=bb.pk %}">Изменить</a></p>
 	<p><a href="{% url 'bb_confirm_delete' pk=bb.pk %}">Удалить</a></p>
+	<p>
+		{% for d in date_list %}
+		{{ d.year }}
+		{% endfor %}
 	<!-- <h2>{{ bb.title_and_price }} </h2> -->
 </div>
 {% endfor %}
