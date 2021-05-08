@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .views import BbIndexView, BbCreateView, BbDetailView, BbByRubricView, BbEditView, BbDeleteView, index
-#from .views import index, by_rubric, add_and_save, BbAddView
+from .views import BbCreateView, BbDetailView, BbByRubricView, BbEditView, BbDeleteView, index
+#from .views import index, by_rubric, add_and_save, BbAddView, BbIndexView,
 
 urlpatterns = [
     path ('bb_confirm_delete/<int:pk>', BbDeleteView.as_view(), name='bb_confirm_delete'),

@@ -15,7 +15,7 @@ from .forms import BbForm
 class BbRedirectView(RedirectView):
     url='/bboard/'
 
-class BbIndexView(ArchiveIndexView):
+'''class BbIndexView(ArchiveIndexView):
     model = Bb
     date_field = 'published'
     template_name = 'bboard/index.html'
@@ -25,7 +25,7 @@ class BbIndexView(ArchiveIndexView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['rubrics'] = Rubric.objects.all()
-        return context     
+        return context'''     
 
 class BbByRubricView(SingleObjectMixin,ListView):
     template_name = 'bboard/by_rubric.html'
