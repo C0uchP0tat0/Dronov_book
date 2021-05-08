@@ -5,11 +5,14 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.template.response import TemplateResponse
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.list import ListView
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.dates import ArchiveIndexView, DateDetailView
 
 from .models import Bb, Rubric
 from .forms import BbForm
+
+class BbRedirectView(RedirectView):
+    url='/bboard/'
 
 class BbIndexView(ArchiveIndexView):
     model = Bb

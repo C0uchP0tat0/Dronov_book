@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from bboard.views import BbRedirectView
 
 urlpatterns = [
+    path('', BbRedirectView.as_view(), name='old_index' ),
     #path('',include('bboard.urls',namespace=''))
     path('bboard/', include('bboard.urls')), 
     path('admin/', admin.site.urls),
