@@ -7,6 +7,7 @@ from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.dates import ArchiveIndexView, DateDetailView
+from django.core.paginator import Paginator
 
 from .models import Bb, Rubric
 from .forms import BbForm
@@ -136,11 +137,17 @@ class BbDetailView(DetailView):
         return reverse('by_rubric',
             kwargs={'rubric_id': self.object.cleaned_data['rubric'].pk})'''
 
-'''def index(request):
+def index(request):
     bbs = Bb.objects.order_by()
     rubrics = Rubric.objects.all()
-    context = {'bbs': bbs, 'rubrics' : rubrics}
-    return TemplateResponse(request, 'bboard/index.html', context)'''
+    paginator = Paginator(bbs, 2)
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
+    page = paginator.get_page(page_num)
+    context = {'bbs': page.object_list, 'rubrics' : rubrics, 'page': page}
+    return render(request, 'bboard/index.html', context)
 
 '''def by_rubric(request, rubric_id):
     bbs = Bb.objects.filter(rubric=rubric_id)

@@ -15,6 +15,17 @@
 		{% endfor %}
 	<!-- <h2>{{ bb.title_and_price }} </h2> -->
 </div>
+<div>
+	{% if page.has_previous %}
+	<a href="?page={{ page.previous_page_number }}">&lt;></a>
+	&nbsp;&nbsp;|&nbsp;&nbsp;
+	{% endif %}
+	Часть №{{ page.number }} из {{ page.paginator.num_pages }}
+	{% if page.has_next %}
+	&nbsp;&nbsp;|&nbsp;&nbsp;
+	<a href="?page={{ page.next_page_number }}">&lt;></a>
+	{% endif %}
+</div>
 {% endfor %}
 {% endblock %}
 
