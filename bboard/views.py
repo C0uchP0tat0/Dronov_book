@@ -15,6 +15,18 @@ from .forms import BbForm
 class BbRedirectView(RedirectView):
     url='/bboard/'
 
+def index(request):
+    bbs = Bb.objects.order_by()
+    rubrics = Rubric.objects.all()
+    paginator = Paginator(bbs, 2)
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
+    page = paginator.get_page(page_num)
+    context = {'bbs': page.object_list, 'rubrics' : rubrics, 'page': page}
+    return render(request, 'bboard/index.html', context)
+
 '''class BbIndexView(ArchiveIndexView):
     model = Bb
     date_field = 'published'
@@ -55,7 +67,7 @@ class BbCreateView(CreateView):
         context['rubrics'] = Rubric.objects.all()
         return context
 
-class BbEditView(UpdateView):
+'''class BbEditView(UpdateView):
     model = Bb
     form_class = BbForm
     success_url = reverse_lazy('index')
@@ -63,16 +75,42 @@ class BbEditView(UpdateView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['rubrics'] = Rubric.objects.all()
-        return context  
+        return context'''
 
-class BbDeleteView(DeleteView):
+def edit(request, pk):
+    bb = Bb.objects.get(pk=pk)
+    if request.method == 'POST':
+        bbf = BbForm(request.POST, instance=bb)
+        if bbf.is_valid():
+            bb.save()
+            return HttpResponseRedirect(reverse('by_rubric',
+                   kwargs={'rubric_id': bbf.cleaned_data['rubric'].pk}))
+        else:
+            context = {'form': bbf}
+            return render(request, 'bboard/bb_form.html', context)
+    else:
+        bbf = BbForm(instance=bb)
+        context = {'form': bbf}
+        return render(request, 'bboard/bb_form.html', context)
+
+'''class BbDeleteView(DeleteView):
     model = Bb
     success_url = reverse_lazy('index')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['rubrics'] = Rubric.objects.all()
-        return context  
+        return context'''
+
+def delete(request, pk):
+    bb = Bb.objects.get(pk=pk)
+    if request.method == 'POST':
+        bb.delete()
+        return HttpResponseRedirect(reverse('by_rubric',
+               kwargs={'rubric_id': bb.rubric.pk}))
+    else:
+        context = {'bb': bb}
+        return render(request, 'bboard/bb_confirm_delete.html', context)
 
 class BbDetailView(DetailView):
     model = Bb
@@ -136,18 +174,6 @@ class BbDetailView(DetailView):
     def get_success_url(self):
         return reverse('by_rubric',
             kwargs={'rubric_id': self.object.cleaned_data['rubric'].pk})'''
-
-def index(request):
-    bbs = Bb.objects.order_by()
-    rubrics = Rubric.objects.all()
-    paginator = Paginator(bbs, 2)
-    if 'page' in request.GET:
-        page_num = request.GET['page']
-    else:
-        page_num = 1
-    page = paginator.get_page(page_num)
-    context = {'bbs': page.object_list, 'rubrics' : rubrics, 'page': page}
-    return render(request, 'bboard/index.html', context)
 
 '''def by_rubric(request, rubric_id):
     bbs = Bb.objects.filter(rubric=rubric_id)
