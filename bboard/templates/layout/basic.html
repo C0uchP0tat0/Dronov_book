@@ -14,8 +14,13 @@
 		<nav>
 			<a href="{% url 'index' %}">Главная</a>
 			<a href="{% url 'add' %}">Добавить</a>
+			<a href="{% url 'rubrics' %}">Управление рубриками</a>
 			{% for rubric in rubrics %}
-			<a href="{% url 'by_rubric' rubric.pk %}">{{ rubric.name }}</a> 
+			<a href="{% url 'by_rubric' rubric.pk %}">{{ rubric.name }}</a>
+			{% endfor %}
+			<h3>Изменить, добавить, удалить</h3>
+			{% for rubric in rubrics %}
+			<a href="{% url 'bbs' rubric.pk %}">{{ rubric.name }}</a>
 			{% endfor %}
 		</nav>
 		<section>

@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import BbCreateView, BbDetailView, BbByRubricView, index, edit, delete
+from .views import BbCreateView, BbDetailView, BbByRubricView, index, edit, delete, rubrics, bbs
 #from .views import index, by_rubric, add_and_save, BbAddView, BbIndexView, BbEditView, BbDeleteView,
 
 #app_name = 'bboard'
@@ -15,6 +15,8 @@ urlpatterns = [
     #path ('add/', BbAddView.as_view(), name='add'),
     path ('bb_confirm_delete/<int:pk>', delete, name='bb_confirm_delete'),
     path ('bb_form/<int:pk>', edit, name='bb_form'),
+    path ('rubrics/', rubrics, name='rubrics'),
+    path ('bbs/<int:rubric_id>/', bbs, name='bbs'),
     path ('', index, name='index'),
     #path ('add/', add_and_save, name='add'),
     #path ('<int:rubric_id>/', by_rubric, name='by_rubric'),

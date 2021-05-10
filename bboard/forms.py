@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 
 from .models import Bb, Rubric
 
+
 class BbForm(ModelForm):
     title = forms.CharField(label='Название товара')
     content = forms.CharField(label='Описание', 

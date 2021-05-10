@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, FormView, DeleteView
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
@@ -8,6 +8,8 @@ from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.dates import ArchiveIndexView, DateDetailView
 from django.core.paginator import Paginator
+from django.forms import modelformset_factory, inlineformset_factory
+from django.forms.formsets import ORDERING_FIELD_NAME
 
 from .models import Bb, Rubric
 from .forms import BbForm
@@ -119,6 +121,48 @@ class BbDetailView(DetailView):
         context = super().get_context_data(*args, **kwargs)
         context['rubrics'] = Rubric.objects.all()
         return context
+
+def rubrics(request):
+    RubricFormSet = modelformset_factory(Rubric, fields=('name',),
+                                          can_delete=True, can_order=True,)
+    if request.method == 'POST':
+        formset = RubricFormSet(request.POST)
+        if formset.is_valid():
+            for form in formset:
+                if form.cleaned_data:
+                    rubric = form.save(commit=False)
+                    rubric.order = form.cleaned_data[ORDERING_FIELD_NAME]
+                    rubric.save()
+            return redirect('index')
+    else:
+        formset = RubricFormSet()
+    context = {'formset': formset}
+    return render(request, 'bboard/rubrics.html', context)
+
+def bbs(request, rubric_id):
+    BbsFormSet = inlineformset_factory(Rubric, Bb, form=BbForm, extra=1)
+    rubric = Rubric.objects.get(pk=rubric_id)
+    if request.method == 'POST':
+        formset = BbsFormSet(request.POST, instance=rubric)
+        if formset.is_valid():
+            formset.save()
+            return redirect('index')
+    else:
+        formset = BbsFormSet(instance=rubric)
+    context = {'formset': formset, 'current_rubric': rubric}
+    return render(request, 'bboard/bbs.html', context)
+'''def rubrics(request):
+    RubricFormSet = modelformset_factory(Rubric, fields=('name',),
+                                                 can_delete=True)
+    if request.method == 'POST':
+        formset = RubricFormSet(request.POST)
+        if formset.is_valid():
+            formset.save()
+            return redirect('index')
+    else:
+        formset = RubricFormSet()
+    context = {'formset': formset}
+    return render(request, 'bboard/rubrics.html', context)'''
 
 
 '''class BbByRubricView(ListView):
