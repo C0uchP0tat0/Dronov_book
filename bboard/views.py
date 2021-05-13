@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, FormView, DeleteView
 from django.urls import reverse_lazy, reverse
-from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
+from django.http import HttpResponseRedirect, HttpResponse, HttpRequest, HttpResponseForbidden
 from django.template.response import TemplateResponse
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.list import ListView
@@ -10,6 +10,9 @@ from django.views.generic.dates import ArchiveIndexView, DateDetailView
 from django.core.paginator import Paginator
 from django.forms import modelformset_factory, inlineformset_factory
 from django.forms.formsets import ORDERING_FIELD_NAME
+from django.contrib.auth.views import redirect_to_login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Bb, Rubric
 from .forms import BbForm
@@ -18,16 +21,18 @@ class BbRedirectView(RedirectView):
     url='/bboard/'
 
 def index(request):
-    bbs = Bb.objects.order_by()
-    rubrics = Rubric.objects.all()
-    paginator = Paginator(bbs, 2)
-    if 'page' in request.GET:
-        page_num = request.GET['page']
-    else:
-        page_num = 1
-    page = paginator.get_page(page_num)
-    context = {'bbs': page.object_list, 'rubrics' : rubrics, 'page': page}
-    return render(request, 'bboard/index.html', context)
+    
+        bbs = Bb.objects.order_by()
+        rubrics = Rubric.objects.all()
+        paginator = Paginator(bbs, 2)
+        if 'page' in request.GET:
+            page_num = request.GET['page']
+        else:
+            page_num = 1
+        page = paginator.get_page(page_num)
+        context = {'bbs': page.object_list, 'rubrics' : rubrics, 'page': page}
+        return render(request, 'bboard/index.html', context)
+    
 
 '''class BbIndexView(ArchiveIndexView):
     model = Bb
@@ -59,7 +64,7 @@ class BbByRubricView(SingleObjectMixin,ListView):
     def get_queryset(self):
         return self.object.bb_set.all()
       
-class BbCreateView(CreateView):
+class BbCreateView(LoginRequiredMixin, CreateView):
     template_name = 'bboard/create.html'
     form_class = BbForm
     success_url = reverse_lazy('index')
@@ -122,6 +127,7 @@ class BbDetailView(DetailView):
         context['rubrics'] = Rubric.objects.all()
         return context
 
+@login_required(login_url='/accounts/login/')
 def rubrics(request):
     RubricFormSet = modelformset_factory(Rubric, fields=('name',),
                                           can_delete=True, can_order=True,)
