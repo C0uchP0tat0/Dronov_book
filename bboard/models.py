@@ -33,12 +33,16 @@ class Bb(models.Model):
         verbose_name = 'Объявление'
         ordering = ['-published']
 
+class RubricQuerySet(models.QuerySet):
+    def order_by_bb_count(self):
+        return self.annotate(cnt=models.Count('bb')).order_by('-cnt')
+
 class RubricManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().order_by('order', 'name')
+        return RubricQuerySet(self.model, using=self._db)
 
     def order_by_bb_count(self):
-        return super().get_queryset().annotate(cnt=models.Count('bb')).order_by('-cnt')
+        return self.get_queryset().order_by_bb_count()
 
 class Rubric(models.Model):
     name = models.CharField(max_length=20, db_index=True, verbose_name='Название')
