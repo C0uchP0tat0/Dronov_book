@@ -1,8 +1,9 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, formset_factory
 from django.forms import modelform_factory, DecimalField
 from django.forms.widgets import Select
 from django import forms
 from django.core.exceptions import ValidationError
+from captcha.fields import CaptchaField
 
 
 from .models import Bb, Rubric
@@ -16,6 +17,8 @@ class BbForm(ModelForm):
     rubric = forms.ModelChoiceField(queryset=Rubric.objects.all(),
              label='Рубрика', help_text='Не забудьте выбрать рубрику!',
              widget=forms.widgets.Select(attrs={'size': 8}))
+    captcha = CaptchaField(label='Введите текст с картинки',
+              error_messages={'invalid': 'Неправильный текст'})
     class Meta:
         model = Bb
         fields = ('title', 'content', 'price', 'rubric')
@@ -29,6 +32,13 @@ class BbForm(ModelForm):
             errors['price'] = ValidationError('Укажите не отрицательное значение цены')
         if errors:
             raise ValidationError(errors)
+
+class SearchForm(forms.Form):
+    keyword = forms.CharField(max_length=20, label='Искомое слово')
+    rubric = forms.ModelChoiceField(queryset=Rubric.objects.all(),
+             label='Рубрика')
+
+fs = formset_factory(SearchForm, extra=3, can_delete=True)
         
 
 '''class RegisterUserForm(forms.ModelForm):

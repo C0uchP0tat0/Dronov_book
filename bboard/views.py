@@ -32,6 +32,21 @@ def index(request):
         page = paginator.get_page(page_num)
         context = {'bbs': page.object_list, 'rubrics' : rubrics, 'page': page}
         return render(request, 'bboard/index.html', context)
+
+def search(request):
+    if request.method == 'POST':
+        sf = SearchForm(request.POST)
+        if sf.is_valid():
+            keyword = sf.cleaned_data['keyword']
+            rubric_id = sf.cleaned_data['rubric'].pk
+            bbs = Bs.objects.filter()
+            context = {'bbs': bbs}
+            return render(request, 'bboard/search_result.html', context)
+    else:
+        sf = SearchForm()
+    context = {'form': sf}
+    return render(request, 'bboard/search.html', context)
+
     
 
 '''class BbIndexView(ArchiveIndexView):
