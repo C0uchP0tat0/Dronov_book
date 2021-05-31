@@ -13,6 +13,7 @@ from django.forms.formsets import ORDERING_FIELD_NAME
 from django.contrib.auth.views import redirect_to_login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from precise_bbcode.bbcode import get_parser
 
 from .models import Bb, Rubric
 from .forms import BbForm
@@ -125,7 +126,9 @@ def edit(request, pk):
         return context'''
 
 def delete(request, pk):
+    parser = get_parser()
     bb = Bb.objects.get(pk=pk)
+    parsed_content = parser.render(bb.content)
     if request.method == 'POST':
         bb.delete()
         return HttpResponseRedirect(reverse('by_rubric',
@@ -136,7 +139,7 @@ def delete(request, pk):
 
 class BbDetailView(DetailView):
     model = Bb
-
+    
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['rubrics'] = Rubric.objects.all()

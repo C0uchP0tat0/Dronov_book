@@ -1,4 +1,7 @@
 {% extends "layout/basic.html" %}
+{% load bbcode_tags %}
+{% load bootstrap4 %}
+
 
 {% block title %}Удаление объявления{% endblock %}
 
@@ -6,8 +9,8 @@
 <h2>Удаление объявления</h2>
 <p>Рубрика: {{ bb.rubric.name }}</p>
 <p>Товар: {{ bb.title }}</p>
-<p>{{ bb.content }}</p>
-<p>Цена: {{ bb.title }}</p>
+<b>{{ bb.content }}</b>
+<p>Цена: {{ bb.price }}</p>
 <form method="post">
 	{% csrf_token %}
 	<input type="submit" value="Удалить">
