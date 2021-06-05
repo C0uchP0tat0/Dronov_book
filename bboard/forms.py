@@ -4,9 +4,10 @@ from django.forms.widgets import Select
 from django import forms
 from django.core.exceptions import ValidationError
 from captcha.fields import CaptchaField
+from django.core import validators
 
 
-from .models import Bb, Rubric
+from .models import Bb, Rubric, Img
 
 
 class BbForm(ModelForm):
@@ -39,6 +40,19 @@ class SearchForm(forms.Form):
              label='Рубрика')
 
 fs = formset_factory(SearchForm, extra=3, can_delete=True)
+
+class ImgForm(forms.ModelForm):
+    img = forms.ImageField(label='Изображение',
+          validators=[validators.FileExtensionValidator(
+          allowed_extensions=('gif', 'jpg', 'png'))],
+          error_messages={'invalid_extension': 'Этот формат файла' + \
+          'не поддерживается'})
+    desc = forms.CharField(label='Описание',
+                           widget=forms.widgets.Textarea())
+
+    class Meta:
+        model = Img
+        fields = '__all__'
         
 
 '''class RegisterUserForm(forms.ModelForm):

@@ -1,7 +1,8 @@
-
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from bboard.views import BbRedirectView
+from bboard.views import BbRedirectView, add_img
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView,\
                                       PasswordChangeDoneView, PasswordResetView, \
                                       PasswordResetDoneView, PasswordResetConfirmView,\
@@ -35,4 +36,7 @@ urlpatterns = [
     path('accounts/reset/<uidb64>/<token>', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('accounts/reset/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('captcha/', include('captcha.urls')),
+    path('add_img/', add_img, name='add_img'),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

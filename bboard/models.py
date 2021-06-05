@@ -77,6 +77,16 @@ class PrivateMessage(Message):
     # Удаляем поле email
     #email = None
 
+# класс для хранения картинок
+class Img(models.Model):
+    img = models.ImageField(verbose_name='Изображение',
+                            upload_to='archives/%Y/%m/%d/')
+    decs = models.TextField(verbose_name='Описание')
+
+    class Mets:
+        verbose_name='Изображение'
+        verbose_name_plural='Изображение'
+
 
 class Spare(models.Model):
     name = models.CharField(max_length=40)

@@ -127,3 +127,7 @@ LOGIN_REDIRECT_URL = '/'
 
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
 CAPTCHA_IMAGE_SIZE = (150, 50)
+
+# работа с подсистемой вынрузки файлов
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

@@ -1,0 +1,17 @@
+{% extends "layout/basic.html" %}
+
+{% block title %}Добавление изображения{% endblock %}
+
+{% block content %}
+	<h2>Добавление изображения</h2>
+	<form method="post">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<input type="submit" value="Сохранить">
+	</form>
+	{% for img in imgs %}
+		<div><img src="{{ img.img.url }}"></div>
+		<div><a href="{{ img.img.url }}">Загрузить картинку</a></div>
+	{% endfor %}
+{% endblock %}
+
