@@ -19,15 +19,23 @@ from .forms import BbForm, ImgForm
 
 #контроллер обработки выгружаемых файлов
 def add_img(request):
+    imgs = Img.objects.all()
     if request.method == 'POST':
         form = ImgForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('index')
+            return redirect('add_img')
     else:
         form = ImgForm()
-    context = {'form': form}
+    context = {'form': form,
+               'imgs': imgs}
     return render(request, 'bboard/add_img.html', context)
+
+def del_img(request, pk):
+    img = Img.objects.get(pk=pk)
+    img.img.delete()
+    img.delete()
+    return redirect('add_img')
 
 class BbRedirectView(RedirectView):
     url='/bboard/'

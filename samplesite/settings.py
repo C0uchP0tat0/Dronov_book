@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'captcha',
     'precise_bbcode',
     'bootstrap4',
+    'django_cleanup',
+    'easy_thumbnails',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +133,15 @@ CAPTCHA_IMAGE_SIZE = (150, 50)
 # работа с подсистемой вынрузки файлов
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# Настройка миниатюр изображений
+THUMBNAIL_ALIASES = {
+    '': { 
+        'default': {
+            'size': (400, 300),
+            'crop': 'scale',
+        },
+    },
+}
+
+

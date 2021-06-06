@@ -47,7 +47,7 @@ class ImgForm(forms.ModelForm):
           allowed_extensions=('gif', 'jpg', 'png'))],
           error_messages={'invalid_extension': 'Этот формат файла' + \
           'не поддерживается'})
-    desc = forms.CharField(label='Описание',
+    decs = forms.CharField(label='Описание',
                            widget=forms.widgets.Textarea())
 
     class Meta:

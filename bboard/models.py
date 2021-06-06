@@ -87,6 +87,10 @@ class Img(models.Model):
         verbose_name='Изображение'
         verbose_name_plural='Изображение'
 
+    def delete(self, *args, **kwargs):
+        self.img.delete(save=False)
+        super().delete(*args, **kwargs)
+
 
 class Spare(models.Model):
     name = models.CharField(max_length=40)

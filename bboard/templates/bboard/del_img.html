@@ -1,0 +1,13 @@
+{% extends "layout/basic.html" %}
+
+{% block title %}Удаление изображения{% endblock %}
+
+{% block content %}
+<div><img src="{{ img.img.url }}"></div>
+	<form method="post">
+		{% csrf_token %}
+		<input type="submit" value="Удалить">
+		{% endfor %}
+	</form>
+{% endblock %}
+
