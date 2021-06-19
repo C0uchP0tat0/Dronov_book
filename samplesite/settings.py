@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'django_cleanup',
     'easy_thumbnails',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +69,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -148,4 +151,12 @@ THUMBNAIL_ALIASES = {
     },
 }
 
+#social_core.backends.vk.VKOAuth2:
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.vk.VKOAuth2',
+)
 
+SOCIAL_AUTH_VK_OAUTH2_KEY = '7883482'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = 'VzGoSVtOrmCxjB8NYnrR'
+SOCIAL_AUTH_VK_OAUTH2_KEY_SCOPE = ['email']

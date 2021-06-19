@@ -3,6 +3,10 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
+class Profile(models.Model):
+    phone = models.CharField(max_length=20)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
 class AdvUser(models.Model):
     is_activated = models.BooleanField(default=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)

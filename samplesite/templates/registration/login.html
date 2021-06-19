@@ -11,7 +11,7 @@
 	</table>
 	<input type="hidden" name="next" value="{{ next }}">
 	<input type="submit" value="Войти">
-	
+	<a href="{% url 'social:begin' 'vk-oauth2' %}">Войти через ВКотакте</a>
 </form>
 {% endif %}
 {% endblock %}
