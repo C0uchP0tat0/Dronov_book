@@ -13,5 +13,17 @@
 	<p><a href="{% url 'bb_confirm_delete' pk=bb.pk %}">Удалить</a></p>
 </div>
 {% endfor %}
+<div>
+	{% if messages %}
+		<ul class="messages">
+		{% for message in messages %}
+			<li {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+			{{ message }}
+			</li>
+		{% endfor %}
+		</ul>
+	{% endif %}
+</div>
 {% endblock %}
+
 

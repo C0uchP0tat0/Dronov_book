@@ -13,6 +13,8 @@ from django.forms.formsets import ORDERING_FIELD_NAME
 from django.contrib.auth.views import redirect_to_login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 
 from .models import Bb, Rubric, Img
 from .forms import BbForm, ImgForm
@@ -99,8 +101,14 @@ class BbByRubricView(SingleObjectMixin,ListView):
 
     def get_queryset(self):
         return self.object.bb_set.all()
-      
-class BbCreateView(LoginRequiredMixin, CreateView):
+
+class BbCreateView(SuccessMessageMixin, CreateView):
+    template_name = 'bboard/create.html'
+    form_class = BbForm
+    success_url = '{rubric_id}'
+    success_message = 'Объявление о продаже товара "%(title)s" создано.' 
+         
+'''class BbCreateView(LoginRequiredMixin, CreateView):
     template_name = 'bboard/create.html'
     form_class = BbForm
     success_url = reverse_lazy('index')
@@ -108,7 +116,7 @@ class BbCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
         context['rubrics'] = Rubric.objects.all()
-        return context
+        return context'''
 
 '''class BbEditView(UpdateView):
     model = Bb
@@ -126,6 +134,8 @@ def edit(request, pk):
         bbf = BbForm(request.POST, instance=bb)
         if bbf.is_valid():
             bb.save()
+            messages.add_message(request, messages.SUCCESS, 'Объявление исправлено')
+            #messages.success(request, 'Объявление исправлено')
             return HttpResponseRedirect(reverse('by_rubric',
                    kwargs={'rubric_id': bbf.cleaned_data['rubric'].pk}))
         else:
