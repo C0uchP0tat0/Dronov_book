@@ -135,7 +135,7 @@ def edit(request, pk):
         if bbf.is_valid():
             bb.save()
             messages.add_message(request, messages.SUCCESS, 'Объявление исправлено')
-            #messages.success(request, 'Объявление исправлено')
+            #messages.success(request, 'Объявление исправлено  ')
             return HttpResponseRedirect(reverse('by_rubric',
                    kwargs={'rubric_id': bbf.cleaned_data['rubric'].pk}))
         else:
