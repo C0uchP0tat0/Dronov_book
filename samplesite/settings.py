@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 
+# Отправка имейлов
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -162,3 +166,15 @@ AUTHENTICATION_BACKENDS = (
 SOCIAL_AUTH_VK_OAUTH2_KEY = '7883482'
 SOCIAL_AUTH_VK_OAUTH2_SECRET = 'VzGoSVtOrmCxjB8NYnrR'
 SOCIAL_AUTH_VK_OAUTH2_KEY_SCOPE = ['email']
+
+'''DEFAULT_FROM_EMAIL = 'denis431@mail.ru'
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 2525
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'denis431@mail.ru'
+EMAIL_HOST_PASSWORD = 'pojbez2016'
+#context = {'user': 'Вася Пупкин'}
+#s = render_to_string('letter.txt', context)
+em = EmailMessage(subject='Test',body='Test', to=['denis431@mail.ru'])
+em.send()'''
