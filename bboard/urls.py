@@ -1,7 +1,7 @@
 from django.urls import path
 #from django.contrib.auth.views import LoginView, LogoutView
 
-from .views import BbCreateView, BbDetailView, BbByRubricView, index, edit, delete, rubrics, bbs
+from .views import BbCreateView, BbDetailView, BbByRubricView, index, edit, delete, rubrics, bbs, api_rubrics
 
 #from .views import index, by_rubric, add_and_save, BbAddView, BbIndexView, BbEditView, BbDeleteView,
 
@@ -12,6 +12,7 @@ urlpatterns = [
     path ('add/', BbCreateView.as_view(), name='add'),
     path ('detail/<int:pk>/', BbDetailView.as_view(), name='detail'),
     path ('<int:rubric_id>/', BbByRubricView.as_view(), name='by_rubric'),
+    path ('api/rubrics/', api_rubrics),
     #path ('', BbIndexView.as_view(), name='index'),
     #path ('detail/<int:year>/<int:month>/<int:day>/<int:pk>/', BbDetailView.as_view(), name='detail'),
     #path ('add/', BbAddView.as_view(), name='add'),

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, FormView, DeleteView
 from django.urls import reverse_lazy, reverse
-from django.http import HttpResponseRedirect, HttpResponse, HttpRequest, HttpResponseForbidden
+from django.http import HttpResponseRedirect, HttpResponse, HttpRequest, HttpResponseForbidden, JsonResponse
 from django.template.response import TemplateResponse
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.list import ListView
@@ -15,9 +15,20 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from .serializers import RubricSerializer
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 from .models import Bb, Rubric, Img
 from .forms import BbForm, ImgForm
+
+#реализация rest - котнтроллера
+@api_view(['GET'])
+def api_rubrics(request):
+    if request.method == 'GET':
+        rubrics = Rubric.objects.all()
+        serializer = RubricSerializer(rubrics, many=True)
+        return Response(serializer.data)
 
 #контроллер обработки выгружаемых файлов
 def add_img(request):
